@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_app/providers/cart_provider.dart';
 
 class ProductsDetailPage extends StatefulWidget {
   final Map<String, Object> product;
@@ -10,6 +12,26 @@ class ProductsDetailPage extends StatefulWidget {
 
 class _ProductsDetailPageState extends State<ProductsDetailPage> {
   int selectedSize = 0;
+  void onTap() {
+    if (selectedSize != 0) {
+      context.read<CartProvider>().addProduct({
+        'id': widget.product['id'],
+        'title': widget.product['title'],
+        'price': widget.product['price'],
+        'imageUrl': widget.product['imageUrl'],
+        'company': widget.product['company'],
+        'sizes': selectedSize,
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Product added successfully!")));
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Please select a size!")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,10 +109,10 @@ class _ProductsDetailPageState extends State<ProductsDetailPage> {
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: onTap,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
-                        minimumSize: Size(double.infinity, 50),
+                        fixedSize: Size(350, 50),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
